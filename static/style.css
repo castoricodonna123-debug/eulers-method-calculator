@@ -45,23 +45,19 @@ h1 {
     font-size: 15px;
 }
 
-/* FIXED MAIN LAYOUT */
 .layout {
     display: grid;
-    grid-template-columns: 1fr 300px;
+    grid-template-columns: 446px 278px;
     gap: 22px;
     align-items: start;
     justify-content: center;
-    max-width: 980px;
-    margin: 0 auto;
     padding: 0 16px 40px;
 }
 
 .left-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 14px;
-    min-width: 0;
 }
 
 .card {
@@ -100,8 +96,6 @@ p {
 }
 
 .calculator-card {
-    width: 100%;
-    min-width: 0;
     min-height: 530px;
     padding: 16px;
 }
@@ -192,14 +186,14 @@ button {
 }
 
 @media (max-width: 820px) {
-    .layout {
-        grid-template-columns: 1fr;
-        max-width: 430px;
-        margin: 0 auto;
-    }
-
+    .layout,
     .left-grid {
         grid-template-columns: 1fr;
+    }
+
+    .layout {
+        max-width: 430px;
+        margin: 0 auto;
     }
 
     .description,
