@@ -3,6 +3,7 @@ from __future__ import annotations
 import ast
 import math
 import operator
+import re
 from dataclasses import dataclass
 
 from flask import Flask, render_template, request
@@ -54,7 +55,7 @@ class FormulaEvaluator:
     """Small safe evaluator for classroom formulas such as x + y or sin(x) - y."""
 
     def __init__(self, expression: str):
-        normalized = expression.replace("^", "**")
+        normalized = normalize_expression(expression)
         self.tree = ast.parse(normalized, mode="eval")
         self._validate(self.tree)
 
@@ -68,6 +69,9 @@ class FormulaEvaluator:
 
         if isinstance(node, ast.Name) and node.id in ALLOWED_NAMES:
             return
+
+        if isinstance(node, ast.Name):
+            raise SyntaxError("Unknown variable.")
 
         if isinstance(node, ast.BinOp) and type(node.op) in OPERATORS:
             self._validate(node.left)
@@ -115,6 +119,14 @@ class FormulaEvaluator:
         raise ValueError("Invalid expression.")
 
 
+def normalize_expression(expression: str) -> str:
+    normalized = expression.strip().replace("^", "**")
+    normalized = re.sub(r"(\d)([xy])", r"\1*\2", normalized)
+    normalized = re.sub(r"(\))([xy\d])", r"\1*\2", normalized)
+    normalized = re.sub(r"([xy])(\()", r"\1*\2", normalized)
+    return normalized
+
+
 def solve_euler(expression: str, x0: float, y0: float, h: float, target_x: float) -> list[EulerRow]:
     if h == 0:
         raise ValueError("Step size h cannot be zero.")
@@ -129,7 +141,10 @@ def solve_euler(expression: str, x0: float, y0: float, h: float, target_x: float
     raw_steps = distance / h
     steps = round(raw_steps)
     if not math.isclose(raw_steps, steps, rel_tol=1e-9, abs_tol=1e-9):
-        raise ValueError("Target x must be reached exactly by the chosen step size.")
+        raise ValueError(
+            "Notice: Target X must be reachable exactly by your Step Size. "
+            "Example: Start=3, Step=6 -> Target must be 9, 15, 21..."
+        )
 
     if abs(steps) > 200:
         raise ValueError("Please use 200 steps or fewer.")
@@ -187,7 +202,12 @@ def index():
                 "final_x": rows[-1].next_x if rows else float(form["x0"]),
                 "final_y": rows[-1].next_y if rows else float(form["y0"]),
             }
-        except (ValueError, SyntaxError, ZeroDivisionError, OverflowError) as exc:
+        except SyntaxError:
+            error = (
+                "Syntax Error: Please check your equation. Use * for multiplication "
+                "(e.g. 2*y). Click (Guide) for help."
+            )
+        except (ValueError, ZeroDivisionError, OverflowError) as exc:
             error = str(exc)
 
     return render_template("index.html", form=form, result=result, error=error)
