@@ -4,7 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Euler's Method Calculator</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
     <script>
         window.MathJax = {
             tex: { inlineMath: [["\\(", "\\)"], ["$", "$"]] },
@@ -13,109 +15,125 @@
     </script>
     <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
+
 <body>
-    <header class="site-header">
-        <h1>Euler's Method Calculator</h1>
-        <p>Numerical Method for Approximating Solutions of Ordinary Differential Equations</p>
-    </header>
 
-    <main class="layout">
-        <div class="left-grid">
-            <section class="card description">
-                <h2>Description</h2>
-                <p>
-                    Euler's Method is a numerical technique for approximating solutions to first-order
-                    differential equations. It uses a known starting point and slope to estimate future
-                    values step by step. Smaller step sizes improve accuracy. This method is widely applied
-                    in engineering, physics, mathematics, and simulations for solving complex real-world
-                    problems.
-                </p>
-            </section>
+<header class="site-header">
+    <h1>Euler's Method Calculator</h1>
+    <p>Numerical Method for Approximating Solutions of ODEs</p>
+</header>
 
-            <section class="card formula-card">
-                <h2>Formula</h2>
-                <div class="formula">\[ y_{n+1}=y_n+h f(x_n,y_n) \]</div>
-                <p><strong>Where:</strong></p>
-                <p><strong>\(y_n\)</strong> = current value of y</p>
-                <p><strong>\(y_{n+1}\)</strong> = next approximated value of y</p>
-                <p><strong>\(x_n\)</strong> = current x value</p>
-                <p><strong>h</strong> = step size or interval length</p>
-                <p><strong>\(f(x_n,y_n)\)</strong> = slope function \(dy/dx\)</p>
-            </section>
+<main class="layout">
 
-            <section class="card example">
-                <h2>Worked Example 1</h2>
-                <p><strong>Given:</strong> \( dy/dx=x+y \)</p>
-                <p>\( y(0)=1,\ h=0.1 \)</p>
-                <p><strong>Solutions:</strong></p>
-                <p><strong>Step 1:</strong></p>
-                <p>\( y_1=1+0.1(1)=1.1 \)</p>
-                <p><strong>Step 2:</strong></p>
-                <p>\( y_2=1.1+0.1(1.2)=1.22 \)</p>
-                <p><strong>Step 3:</strong></p>
-                <p>\( y_3=1.22+0.1(1.42)=1.362 \)</p>
-            </section>
+    <div class="left-grid">
 
-            <section class="card example">
-                <h2>Worked Example 2</h2>
-                <p><strong>Given:</strong> \( dy/dx=x-y \)</p>
-                <p>\( y(0)=2,\ h=0.2 \)</p>
-                <p><strong>Solutions:</strong></p>
-                <p><strong>Step 1:</strong></p>
-                <p>\( y_1=2+0.2(-2)=1.6 \)</p>
-                <p><strong>Step 2:</strong></p>
-                <p>\( y_2=1.6+0.2(-1.4)=1.32 \)</p>
-                <p><strong>Step 3:</strong></p>
-                <p>\( y_3=1.32+0.2(-0.92)=1.136 \)</p>
-            </section>
+        <section class="card description">
+            <h2>Description</h2>
+            <p>Euler's Method approximates solutions step-by-step using slope values.</p>
+        </section>
+
+        <section class="card formula-card">
+            <h2>Formula</h2>
+            <div class="formula">\[ y_{n+1}=y_n+h f(x_n,y_n) \]</div>
+        </section>
+
+        <section class="card example">
+            <h2>Worked Example 1</h2>
+            <p>\( dy/dx=x+y \)</p>
+        </section>
+
+        <section class="card example">
+            <h2>Worked Example 2</h2>
+            <p>\( dy/dx=x-y \)</p>
+        </section>
+
+    </div>
+
+    <aside class="card calculator-card">
+
+        <div class="calculator-title">
+            <h2>Euler's Method Calculator</h2>
+            <span>?</span>
         </div>
 
-        <aside class="card calculator-card">
-            <div class="calculator-title">
-                <h2>Euler's Method Calculator</h2>
-                <span>?</span>
-            </div>
+        <form method="post">
+            <label>f(x,y)
+                <input name="expression" value="{{ form.expression }}" required>
+            </label>
 
-            <form method="post">
-                <label>
-                    \( f(x,y) \)
-                    <input name="expression" value="{{ form.expression }}" placeholder="x + y" required>
-                </label>
+            <label>x0
+                <input name="x0" type="number" value="{{ form.x0 }}" required>
+            </label>
 
-                <label>
-                    x<sub>0</sub>
-                    <input name="x0" type="number" step="any" value="{{ form.x0 }}" required>
-                </label>
+            <label>y0
+                <input name="y0" type="number" value="{{ form.y0 }}" required>
+            </label>
 
-                <label>
-                    y<sub>0</sub>
-                    <input name="y0" type="number" step="any" value="{{ form.y0 }}" required>
-                </label>
+            <label>h
+                <input name="h" type="number" value="{{ form.h }}" required>
+            </label>
 
-                <label>
-                    Step size (h)
-                    <input name="h" type="number" step="any" value="{{ form.h }}" required>
-                </label>
+            <label>target x
+                <input name="target_x" type="number" value="{{ form.target_x }}" required>
+            </label>
 
-                <label>
-                    Target x (x<sub>n</sub>)
-                    <input name="target_x" type="number" step="any" value="{{ form.target_x }}" required>
-                </label>
+            <button type="submit">Compute</button>
+        </form>
 
-                <button type="submit">Compute</button>
-            </form>
+        <div class="result-box">
+            <h3>Result</h3>
 
-            <div class="result-box">
-                <h3>Result</h3>
-                {% if error %}
-                    <p class="error-text">{{ error }}</p>
-                {% elif result %}
-                    <p>{{ "%.6f"|format(result.final_y) }}</p>
-                {% else %}
-                    <p>Enter values</p>
-                {% endif %}
-            </div>
-        </aside>
-    </main>
+            {% if error %}
+                <p class="error-text">{{ error }}</p>
+
+            {% elif result %}
+                <p>{{ "%.6f"|format(result.final_y) }}</p>
+
+            {% else %}
+                <p>Enter values</p>
+            {% endif %}
+        </div>
+
+    </aside>
+
+</main>
+
+<!-- ✅ STEP-BY-STEP TABLE (ADDED ONLY PART) -->
+{% if result and result.rows %}
+
+<div class="euler-table-wrapper">
+
+    <div class="euler-table-title">Step-by-Step Solution Table</div>
+
+    <table class="euler-table">
+        <thead>
+            <tr>
+                <th>n</th>
+                <th>xₙ</th>
+                <th>yₙ</th>
+                <th>f(x,y)</th>
+                <th>xₙ₊₁</th>
+                <th>yₙ₊₁</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for r in result.rows %}
+            <tr>
+                <td>{{ r.n }}</td>
+                <td>{{ "%.4f"|format(r.x) }}</td>
+                <td>{{ "%.4f"|format(r.y) }}</td>
+                <td>{{ "%.4f"|format(r.slope) }}</td>
+                <td>{{ "%.4f"|format(r.next_x) }}</td>
+                <td>{{ "%.4f"|format(r.next_y) }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endif %}
+
 </body>
 </html>
