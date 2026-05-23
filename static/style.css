@@ -1,0 +1,250 @@
+:root {
+    --page: #ececec;
+    --card: #f1e5e7;
+    --border: #d9c6cc;
+    --ink: #111111;
+    --pink: #e73473;
+    --pink-dark: #8a244d;
+    --field: #f5f5f5;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    line-height: 1.25;
+}
+
+.site-header {
+    padding: 14px 16px 24px;
+    text-align: center;
+}
+
+h1,
+h2,
+h3,
+p {
+    margin-top: 0;
+}
+
+h1 {
+    margin-bottom: 14px;
+    color: var(--pink);
+    font-size: 34px;
+    line-height: 1.05;
+}
+
+.site-header p {
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: minmax(0, 446px) 320px;
+    gap: 28px;
+    align-items: start;
+    justify-content: center;
+    padding: 0 16px 40px;
+}
+
+.left-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    min-width: 0;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.12);
+    padding: 16px;
+}
+
+.description,
+.formula-card {
+    min-height: 390px;
+}
+
+.example {
+    min-height: 238px;
+    padding: 20px;
+}
+
+.example h2 {
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.example p {
+    margin-bottom: 7px;
+    font-size: 12px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
+h2 {
+    margin-bottom: 16px;
+    color: var(--pink-dark);
+    font-size: 15px;
+    line-height: 1.15;
+}
+
+p {
+    margin-bottom: 9px;
+    font-size: 13px;
+}
+
+.formula {
+    margin: 6px 0 12px;
+    text-align: center;
+    font-size: 13px;
+}
+
+.calculator-card {
+    width: 320px;
+    min-height: 530px;
+    padding: 16px;
+}
+
+.calculator-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.calculator-title h2 {
+    margin: 0;
+    font-size: 15px;
+}
+
+/* ===================== */
+/* GUIDE BUTTON FIX ONLY */
+/* ===================== */
+
+.help-box {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    display: block;
+    transition: all 0.35s ease;
+    margin-bottom: 13px;
+    border: 1px solid #d5c9cd;
+    border-radius: 9px;
+    background: #fff7fa;
+    padding: 0 12px;
+}
+
+/* open state */
+#toggleHelp:checked ~ .help-box {
+    max-height: 500px;
+    opacity: 1;
+    padding: 12px;
+}
+
+/* arrow animation */
+.guide-button .arrow {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+#toggleHelp:checked ~ .calculator-title .guide-button .arrow {
+    transform: rotate(180deg);
+}
+
+/* guide button styling */
+button.guide-button {
+    width: auto;
+    height: 26px;
+    padding: 3px 8px;
+    background: #fff7fa;
+    border: 1px solid var(--pink-dark);
+    border-radius: 8px;
+    color: var(--pink-dark);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1;
+    box-shadow: none;
+}
+
+button.guide-button:hover {
+    background: rgba(231, 52, 115, 0.12);
+    color: var(--pink);
+}
+
+/* keep rest unchanged */
+form {
+    display: grid;
+    gap: 13px;
+}
+
+label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+input {
+    display: block;
+    width: 100%;
+    height: 48px;
+    margin-top: 7px;
+    border: 2px solid #d0c8ca;
+    border-radius: 9px;
+    background: var(--field);
+    font-size: 13px;
+    padding: 10px 14px;
+}
+
+button {
+    width: 100%;
+    height: 46px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--pink);
+    color: white;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.result-box {
+    margin-top: 14px;
+    border: 1px solid #d5c9cd;
+    border-radius: 9px;
+    background: var(--field);
+    padding: 16px;
+}
+
+.steps-card {
+    grid-column: 1 / -1;
+    width: 746px;
+    margin: 4px auto 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 690px;
+}
+
+th, td {
+    border-bottom: 1px solid #d8d8d8;
+    padding: 8px;
+    text-align: right;
+}
+
+th {
+    color: var(--pink-dark);
+}

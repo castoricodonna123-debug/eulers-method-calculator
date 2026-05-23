@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Euler's Method Calculator</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [["\\(", "\\)"], ["$", "$"]] },
+            svg: { fontCache: "global" }
+        };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <!-- ONLY GUIDE ADD-ON CSS -->
+    <style>
+        .calculator-card {
+            position: relative;
+        }
+
+        .guide-mini-btn {
+            position: absolute;
+            top: 18px;
+            right: 16px;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--pink-dark);
+            background: #fff7fa;
+            color: var(--pink-dark);
+            cursor: pointer;
+            font-weight: 700;
+            user-select: none;
+        }
+
+        .guide-mini-btn:hover {
+            background: rgba(231, 52, 115, 0.12);
+            color: var(--pink);
+        }
+
+        .help-box {
+            display: none;
+            margin-top: 10px;
+            border: 1px solid #d5c9cd;
+            border-radius: 9px;
+            background: #fff7fa;
+            padding: 12px;
+        }
+
+        #toggleHelp:checked ~ .help-box {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <h1>Euler's Method Calculator</h1>
+        <p>Numerical Method for Approximating Solutions of Ordinary Differential Equations</p>
+    </header>
+
+    <main class="layout">
+        <div class="left-grid">
+
+            <section class="card description">
+                <h2>Description</h2>
+                <p>
+                    Euler's Method is a numerical technique for approximating solutions to first-order
+                    differential equations. It uses a known starting point and slope to estimate future
+                    values step by step.
+                </p>
+            </section>
+
+            <section class="card formula-card">
+                <h2>Formula</h2>
+                <div class="formula">\[ y_{n+1}=y_n+h f(x_n,y_n) \]</div>
+            </section>
+
+            <section class="card example">
+                <h2>Worked Example 1</h2>
+                <p>\( dy/dx=x+y \)</p>
+                <p>\( y(0)=1,\ h=0.1 \)</p>
+                <p>\( y_1=1.1,\ y_2=1.22,\ y_3=1.362 \)</p>
+            </section>
+
+            <section class="card example">
+                <h2>Worked Example 2</h2>
+                <p>\( dy/dx=x-y \)</p>
+                <p>\( y(0)=2,\ h=0.2 \)</p>
+                <p>\( y_1=1.6,\ y_2=1.32,\ y_3=1.136 \)</p>
+            </section>
+
+        </div>
+
+        <aside class="card calculator-card">
+
+            <!-- REQUIRED FOR CSS TOGGLE -->
+            <input type="checkbox" id="toggleHelp" hidden>
+
+            <!-- GUIDE BUTTON (ADDED ONLY) -->
+            <label for="toggleHelp" class="guide-mini-btn">
+                Guide it
+            </label>
+
+            <div class="calculator-title">
+                <h2>Euler's Method Calculator</h2>
+            </div>
+
+            <!-- HELP BOX -->
+            <div class="help-box">
+                <h3>How to write your equation correctly:</h3>
+
+                <p><strong>Rules:</strong></p>
+                <ul>
+                    <li>Use <code>*</code> for multiplication: <code>2*y</code></li>
+                    <li>Use <code>^</code> for exponents: <code>x^2</code></li>
+                    <li>Use + and - normally</li>
+                </ul>
+
+                <p><strong>Correct Examples:</strong></p>
+                <p><code>2*x + y</code></p>
+
+                <p><strong>Wrong Examples:</strong></p>
+                <p><code>2x + y</code></p>
+            </div>
+
+            <form method="post">
+                <label>
+                    \( f(x,y) \)
+                    <input name="expression" value="{{ form.expression }}" required>
+                </label>
+
+                <label>
+                    x<sub>0</sub>
+                    <input name="x0" type="number" step="any" value="{{ form.x0 }}" required>
+                </label>
+
+                <label>
+                    y<sub>0</sub>
+                    <input name="y0" type="number" step="any" value="{{ form.y0 }}" required>
+                </label>
+
+                <label>
+                    Step size (h)
+                    <input name="h" type="number" step="any" value="{{ form.h }}" required>
+                </label>
+
+                <label>
+                    Target x
+                    <input name="target_x" type="number" step="any" value="{{ form.target_x }}" required>
+                </label>
+
+                <button type="submit">Compute</button>
+            </form>
+
+            <div class="result-box">
+                <h3>Result</h3>
+
+                {% if error %}
+                    <p class="error-text">{{ error }}</p>
+                {% elif result %}
+                    <p>{{ "%.6f"|format(result.final_y) }}</p>
+                {% else %}
+                    <p>Enter values</p>
+                {% endif %}
+            </div>
+
+        </aside>
+
+        {% if result %}
+        <section class="card steps-card">
+            <h2>Step-by-Step Table</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>n</th>
+                        <th>\(x_n\)</th>
+                        <th>\(y_n\)</th>
+                        <th>\(f(x_n,y_n)\)</th>
+                        <th>\(x_{n+1}\)</th>
+                        <th>\(y_{n+1}\)</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for row in result.rows %}
+                    <tr>
+                        <td>{{ row.n }}</td>
+                        <td>{{ "%.6f"|format(row.x) }}</td>
+                        <td>{{ "%.6f"|format(row.y) }}</td>
+                        <td>{{ "%.6f"|format(row.slope) }}</td>
+                        <td>{{ "%.6f"|format(row.next_x) }}</td>
+                        <td>{{ "%.6f"|format(row.next_y) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </section>
+        {% endif %}
+
+    </main>
+
+</body>
+</html>
