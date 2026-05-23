@@ -199,6 +199,9 @@ button {
     max-width: 980px;
     margin: 20px auto 50px;
     padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* centers everything inside */
 }
 
 .table-section h2 {
@@ -209,6 +212,8 @@ button {
 
 .table-section table {
     width: 100%;
+    max-width: 900px;   /* keeps it centered and not too stretched */
+    margin: 0 auto;     /* centers table horizontally */
     border-collapse: collapse;
     background: var(--field);
     border: 1px solid var(--border);
