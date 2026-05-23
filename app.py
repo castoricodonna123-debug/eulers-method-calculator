@@ -22,7 +22,6 @@ OPERATORS = {
     ast.UAdd: operator.pos,
 }
 
-
 @dataclass
 class EulerRow:
     n: int
@@ -56,73 +55,52 @@ class FormulaEvaluator:
             return
         if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
             if node.func.id not in ALLOWED_FUNCTIONS:
-                raise ValueError(f"Function '{node.func.id}' is not allowed.")
-            for arg in node.args:
-                self._validate(arg)
+                raise ValueError("Function not allowed.")
             return
-        raise ValueError("Use only numbers, x, y, +, -, *, /, ^, and common functions.")
+        raise ValueError("Invalid expression.")
 
     def evaluate(self, x_value: float, y_value: float) -> float:
         return float(self._eval(self.tree.body, {"x": x_value, "y": y_value}))
 
-    def _eval(self, node: ast.AST, values: dict[str, float]) -> float:
+    def _eval(self, node, values):
         if isinstance(node, ast.Constant):
             return float(node.value)
         if isinstance(node, ast.Name):
-            if node.id in values:
-                return values[node.id]
-            return float(ALLOWED_NAMES[node.id])
+            return values[node.id]
         if isinstance(node, ast.BinOp):
-            operation = OPERATORS[type(node.op)]
-            return operation(self._eval(node.left, values), self._eval(node.right, values))
-        if isinstance(node, ast.UnaryOp):
-            operation = OPERATORS[type(node.op)]
-            return operation(self._eval(node.operand, values))
-        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
-            function = ALLOWED_FUNCTIONS[node.func.id]
-            arguments = [self._eval(arg, values) for arg in node.args]
-            return float(function(*arguments))
-        raise ValueError("Invalid expression.")
+            return OPERATORS[type(node.op)](
+                self._eval(node.left, values),
+                self._eval(node.right, values)
+            )
+        if isinstance(node, ast.Call):
+            func = ALLOWED_FUNCTIONS[node.func.id]
+            args = [self._eval(a, values) for a in node.args]
+            return func(*args)
 
 
-def solve_euler(expression: str, x0: float, y0: float, h: float, target_x: float):
-    if h == 0:
-        raise ValueError("Step size h cannot be zero.")
-
-    distance = target_x - x0
-    if distance == 0:
-        return []
-
-    if distance * h < 0:
-        raise ValueError("The step size h must move from x0 toward the target x.")
-
-    raw_steps = distance / h
-    steps = round(raw_steps)
-
-    if not math.isclose(raw_steps, steps, rel_tol=1e-9, abs_tol=1e-9):
-        raise ValueError("Target x must be reached exactly by the chosen step size.")
-
+def solve_euler(expression, x0, y0, h, target_x):
     evaluator = FormulaEvaluator(expression)
+
+    steps = int(round((target_x - x0) / h))
+
     rows = []
-    x_current = x0
-    y_current = y0
+    x, y = x0, y0
 
-    for n in range(abs(steps)):
-        slope = evaluator.evaluate(x_current, y_current)
-        next_y = y_current + h * slope
-        next_x = x_current + h
+    for i in range(steps):
+        slope = evaluator.evaluate(x, y)
+        new_y = y + h * slope
+        new_x = x + h
 
-        rows.append(EulerRow(n, x_current, y_current, slope, next_x, next_y))
+        rows.append(EulerRow(i, x, y, slope, new_x, new_y))
 
-        x_current = next_x
-        y_current = next_y
+        x, y = new_x, new_y
 
     return rows
 
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    defaults = {
+    form = {
         "expression": "x + y",
         "x0": "0",
         "y0": "1",
@@ -132,31 +110,27 @@ def index():
 
     result = None
     error = None
-    form = defaults.copy()
 
     if request.method == "POST":
-        form.update({key: request.form.get(key, "").strip() for key in defaults})
-
         try:
             rows = solve_euler(
-                form["expression"],
-                float(form["x0"]),
-                float(form["y0"]),
-                float(form["h"]),
-                float(form["target_x"]),
+                request.form["expression"],
+                float(request.form["x0"]),
+                float(request.form["y0"]),
+                float(request.form["h"]),
+                float(request.form["target_x"]),
             )
 
             result = {
                 "rows": rows,
-                "final_x": rows[-1].next_x if rows else float(form["x0"]),
-                "final_y": rows[-1].next_y if rows else float(form["y0"]),
+                "final_y": rows[-1].next_y if rows else float(request.form["y0"])
             }
 
-        except (ValueError, SyntaxError, ZeroDivisionError, OverflowError) as exc:
-            error = str(exc)
+        except Exception as e:
+            error = str(e)
 
     return render_template("index.html", form=form, result=result, error=error)
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)
