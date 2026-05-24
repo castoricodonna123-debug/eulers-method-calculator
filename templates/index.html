@@ -1,4 +1,4 @@
-<!doctype html>
+<!doctype html> 
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -84,72 +84,64 @@
         <div class="calculator-title">
             <h2>Euler's Method Calculator</h2>
         </div>
-<button type="button" id="guideBtn" style="
-    background: transparent;
-    border: none;
-    color: var(--pink-dark);
-    font-weight: 700;
-    font-size: 15px;
-    cursor: pointer;
-    padding: 4px 8px;
-    margin: 0;
-    box-shadow: none;
-    transition: 0.2s ease;
-">
-    (Guide)
-</button>
+
+        <!-- ONLY FIXED PART: removed inline style -->
+        <button type="button" id="guideBtn">
+            (Guide)
+        </button>
 
         <div id="guideCard" style="
-    display: none;
-    position: absolute;
-    top: 70px;
-    right: 16px;
-    width: 280px;
-    max-height: 380px;
-    overflow-y: auto;
-    background: var(--card);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    box-shadow: var(--shadow);
-    padding: 18px;
-    z-index: 10;
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--ink);
-">
-    <h3 style="color: var(--pink-dark); margin-top: 0; margin-bottom: 10px; font-size: 16px;">
-        📝 How to write your equation correctly
-    </h3>
+            display: none;
+            position: absolute;
+            top: 70px;
+            right: 16px;
+            width: 280px;
+            max-height: 380px;
+            overflow-y: auto;
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            padding: 18px;
+            z-index: 10;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--ink);
+        ">
+            <h3 style="color: var(--pink-dark); margin-top: 0; margin-bottom: 10px; font-size: 16px;">
+                📝 How to write your equation correctly
+            </h3>
 
-    <p style="margin: 6px 0;"><strong>✅ Rules to follow:</strong></p>
-    <ul style="margin: 4px 0 12px 16px; padding: 0;">
-        <li>Use <code style="background: #fff; padding: 2px 4px; border-radius: 4px;">*</code> for multiplication<br>Write <code>2*y</code> ❌ NOT <code>2y</code></li>
-        <li>Use <code style="background: #fff; padding: 2px 4px; border-radius: 4px;">^</code> for exponents<br>Write <code>x^2</code> ❌ NOT <code>x2</code></li>
-        <li>Use <code style="background: #fff; padding: 2px 4px; border-radius: 4px;">+</code> and <code style="background: #fff; padding: 2px 4px; border-radius: 4px;">-</code> normally</li>
-        <li>Allowed variables: <code>x</code>, <code>y</code></li>
-        <li>Allowed constants: <code>pi</code>, <code>e</code></li>
-        <li>Allowed functions: <code>sin()</code>, <code>cos()</code>, <code>tan()</code>, <code>sqrt()</code>, <code>log()</code>, <code>ln()</code>, <code>exp()</code>, <code>abs()</code></li>
-    </ul>
+            <p style="margin: 6px 0;"><strong>✅ Rules to follow:</strong></p>
+            <ul style="margin: 4px 0 12px 16px; padding: 0;">
+                <li>Use <code>*</code> for multiplication<br>Write <code>2*y</code> ❌ NOT <code>2y</code></li>
+                <li>Use <code>^</code> for exponents<br>Write <code>x^2</code> ❌ NOT <code>x2</code></li>
+                <li>Use <code>+</code> and <code>-</code> normally</li>
+                <li>Allowed variables: <code>x</code>, <code>y</code></li>
+                <li>Allowed constants: <code>pi</code>, <code>e</code></li>
+                <li>Allowed functions: <code>sin()</code>, <code>cos()</code>, <code>tan()</code>, <code>sqrt()</code>, <code>log()</code>, <code>ln()</code>, <code>exp()</code>, <code>abs()</code></li>
+            </ul>
 
-    <p style="margin: 6px 0;"><strong>✅ Correct Examples:</strong></p>
-    <ul style="margin: 4px 0 12px 16px; padding: 0; color: #208020;">
-        <li><code>2*x + y</code></li>
-        <li><code>x - 3*y</code></li>
-        <li><code>x^2 + 5*y</code></li>
-        <li><code>sin(x) + 2*cos(y)</code></li>
-        <li><code>sqrt(x) - y/2</code></li>
-    </ul>
+            <p style="margin: 6px 0;"><strong>✅ Correct Examples:</strong></p>
+            <ul style="margin: 4px 0 12px 16px; padding: 0; color: #208020;">
+                <li><code>2*x + y</code></li>
+                <li><code>x - 3*y</code></li>
+                <li><code>x^2 + 5*y</code></li>
+                <li><code>sin(x) + 2*cos(y)</code></li>
+                <li><code>sqrt(x) - y/2</code></li>
+            </ul>
 
-    <p style="margin: 6px 0;"><strong>❌ Wrong Examples (will cause error):</strong></p>
-    <ul style="margin: 4px 0 0 16px; padding: 0; color: #c1121f;">
-        <li><code>2x + y</code></li>
-        <li><code>x - 3y</code></li>
-        <li><code>x2 + 5y</code></li>
-        <li><code>sin x + y</code></li>
-    </ul>
-</div>
+            <p style="margin: 6px 0;"><strong>❌ Wrong Examples (will cause error):</strong></p>
+            <ul style="margin: 4px 0 0 16px; padding: 0; color: #c1121f;">
+                <li><code>2x + y</code></li>
+                <li><code>x - 3y</code></li>
+                <li><code>x2 + 5y</code></li>
+                <li><code>sin x + y</code></li>
+            </ul>
+        </div>
+
         <form method="post">
             <label>
                 \( f(x,y) \)
@@ -194,12 +186,10 @@
 
 </main>
 
-<!-- ✅ ADDED SECTION: STEP-BY-STEP TABLE (NO CHANGES ABOVE) -->
 <section class="table-section">
     <h2>Step-by-Step Computation Table</h2>
 
     {% if result and result.rows %}
-
     <table>
         <thead>
             <tr>
@@ -224,18 +214,16 @@
             {% endfor %}
         </tbody>
     </table>
-
     {% else %}
         <p style="text-align:center; margin-top:10px;">Enter values to generate step-by-step table.</p>
     {% endif %}
 </section>
 
-    <script>
+<script>
 const guideBtn = document.getElementById('guideBtn');
 const guideCard = document.getElementById('guideCard');
 
 guideBtn.addEventListener('click', function() {
-    // Toggle show/hide
     if (guideCard.style.display === 'block') {
         guideCard.style.display = 'none';
     } else {
@@ -243,7 +231,6 @@ guideBtn.addEventListener('click', function() {
     }
 });
 
-// Close if clicking outside
 document.addEventListener('click', function(e) {
     if (!guideBtn.contains(e.target) && !guideCard.contains(e.target)) {
         guideCard.style.display = 'none';
